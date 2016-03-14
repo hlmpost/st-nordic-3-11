@@ -1,0 +1,153 @@
+#include "main.h"
+#include "eric_rtc.h"
+
+
+//RTC_HandleTypeDef RtcHandle;
+extern RTC_HandleTypeDef hrtc;
+
+
+//--------------------------------------------------------
+
+//-----------------------------------------------------------
+//flag=1-时间，2-日期
+void RTC_Read_datetime(uint8_t * data,uint8_t flag)
+{
+	RTC_DateTypeDef sdatestructureget;
+  RTC_TimeTypeDef stimestructureget;
+
+	if(data!=NULL)
+	{		
+		if(flag==1)
+		{
+			/* Get the RTC current Time */
+			HAL_RTC_GetTime(&hrtc, &stimestructureget, RTC_FORMAT_BIN);
+			data[0]=stimestructureget.Hours;
+			data[1]=stimestructureget.Minutes;
+			data[2]=stimestructureget.Seconds;
+		}
+		else if(flag==2)
+		{
+			/* Get the RTC current Date */
+			HAL_RTC_GetDate(&hrtc, &sdatestructureget, RTC_FORMAT_BIN);
+			data[0]=sdatestructureget.Year;
+			data[1]=sdatestructureget.Month;
+			data[2]=sdatestructureget.Date;
+		}
+	}
+
+}
+//-----------------------------------------------------------
+//传入BCD码
+void RTC_Set_datetime(uint8_t * data,uint8_t flag)
+{
+	RTC_DateTypeDef sdatestructure;
+  RTC_TimeTypeDef stimestructure;
+	if(data!=NULL)
+	{
+		if(flag==1)
+		{
+			 /* Set Time: 02:00:00 */
+			stimestructure.Hours = data[0];
+			stimestructure.Minutes = data[1];
+			stimestructure.Seconds = data[2];
+			stimestructure.TimeFormat = RTC_HOURFORMAT12_AM;
+			stimestructure.DayLightSaving = RTC_DAYLIGHTSAVING_NONE;
+			stimestructure.StoreOperation = RTC_STOREOPERATION_RESET;
+			if(HAL_RTC_SetTime(&hrtc,&stimestructure,RTC_FORMAT_BCD) != HAL_OK)
+				{
+					/* Initialization Error */
+					Error_Handler("set date error"); 
+				}		
+		}
+		else if(flag==2)
+		{
+			sdatestructure.Year =data[0];
+			sdatestructure.Month = data[1];
+			sdatestructure.Date = data[2];
+			if(HAL_RTC_SetDate(&hrtc,&sdatestructure,RTC_FORMAT_BCD) != HAL_OK)
+			{
+				/* Initialization Error */
+				Error_Handler("set time error"); 
+			} 
+		}
+	}//data=null
+
+}
+//---------------------------------------------------
+static void RTC_CalendarConfig(void)
+{
+  RTC_DateTypeDef sdatestructure;
+  RTC_TimeTypeDef stimestructure;
+
+  /*##-1- Configure the Date #################################################*/
+  /* Set Date: Tuesday February 18th 2014 */
+  sdatestructure.Year = 0x16;
+  sdatestructure.Month = RTC_MONTH_FEBRUARY;
+  sdatestructure.Date = 0x04;
+  sdatestructure.WeekDay = RTC_WEEKDAY_TUESDAY;
+  
+  if(HAL_RTC_SetDate(&hrtc,&sdatestructure,RTC_FORMAT_BCD) != HAL_OK)
+  {
+    /* Initialization Error */
+    Error_Handler("set date error-config"); 
+  } 
+  
+  /*##-2- Configure the Time #################################################*/
+  /* Set Time: 02:00:00 */
+  stimestructure.Hours = 0x05;
+  stimestructure.Minutes = 0x33;
+  stimestructure.Seconds = 0x00;
+  stimestructure.TimeFormat = RTC_HOURFORMAT12_AM;
+  stimestructure.DayLightSaving = RTC_DAYLIGHTSAVING_NONE;
+  stimestructure.StoreOperation = RTC_STOREOPERATION_RESET;
+  
+  if(HAL_RTC_SetTime(&hrtc,&stimestructure,RTC_FORMAT_BCD) != HAL_OK)
+  {
+    /* Initialization Error */
+    Error_Handler("set time error-config"); 
+  }
+  
+  /*##-3- Writes a data in a RTC Backup data Register0 #######################*/
+  HAL_RTCEx_BKUPWrite(&hrtc,RTC_BKP_DR0,0x32F4);  
+}
+//------------------------------------------
+void eric_rtc_init()
+{
+	uint16_t temp=0;
+	//rtc
+//	RtcHandle.Instance = RTC;
+//	RtcHandle.Init.HourFormat = RTC_HOURFORMAT_24;
+//  RtcHandle.Init.AsynchPrediv = RTC_ASYNCH_PREDIV;
+//  RtcHandle.Init.SynchPrediv = RTC_SYNCH_PREDIV;
+//  RtcHandle.Init.OutPut = RTC_OUTPUT_DISABLE;
+//  RtcHandle.Init.OutPutPolarity = RTC_OUTPUT_POLARITY_HIGH;
+//  RtcHandle.Init.OutPutType = RTC_OUTPUT_TYPE_OPENDRAIN;
+//  
+//  if(HAL_RTC_Init(&RtcHandle) != HAL_OK)
+//  {
+//    /* Initialization Error */
+//    Error_Handler("rtc init fail");
+//  }
+	
+	//HAL_RTCEx_BKUPWrite(&RtcHandle,RTC_BKP_DR0,0x32F4);  
+//	temp=HAL_RTCEx_BKUPRead(&RtcHandle, RTC_BKP_DR0);
+//	if(temp != 0x32F4)
+//  {  
+//    /* Configure RTC Calendar */
+//    RTC_CalendarConfig();
+//  }
+//  else
+//  {
+//    /* Clear Reset Flag */
+//    __HAL_RCC_CLEAR_RESET_FLAGS();
+//  }
+	
+	//初始化时间
+	{
+//		uint8_t time[3]={0x16,0x32,0x10};
+//		uint8_t date[3]={0x16,0x03,0x09};
+//		RTC_Set_datetime(date,2);
+//		RTC_Set_datetime(time,1);
+	}
+
+}
