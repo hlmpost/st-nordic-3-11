@@ -141,8 +141,17 @@ void flash_write_movedata(uint16_t step_count,uint16_t hrs_rate)
 	uint16_t offset=0;//扇区偏移值
 	uint8_t* temp_add=0;
 	uint8_t hour,min;
-	RTC_Read_datetime((uint8_t *)(&curr_date),2);
-	RTC_Read_datetime(curr_time,1);
+	
+	if(RTC_get_state()==1)
+	{
+		RTC_Read_datetime(curr_time,1);
+		RTC_Read_datetime((uint8_t *)(&curr_date),2);
+	}
+	else
+		SEGGER_RTT_printf(0,"flash_write_movedata:rtc state is error\r\n");
+
+	//SEGGER_RTT_printf(0,"2flash_write_movedata:alarm=%02d:%02d:%02d\r\n",curr_time[0],curr_time[1],curr_time[2]);
+
 	//和当前信息头比较
 	if(data_header[curr_index].curr_date!=curr_date)
 	{
@@ -175,15 +184,18 @@ void flash_write_movedata(uint16_t step_count,uint16_t hrs_rate)
 	if( *temp_add!=0xff && *(temp_add+1)!=0xff)
 	{
 		SEGGER_RTT_printf(0,"flash_write_movedata:data have been writed\r\n");
-		return;
+		//return;
 	}
-	HAL_FLASH_Unlock();
-	HAL_FLASH_Program(FLASH_TYPEPROGRAM_HALFWORD,(uint32_t)(temp_add), step_count);
-	HAL_FLASH_Program(FLASH_TYPEPROGRAM_HALFWORD,(uint32_t)(temp_add+2), hrs_rate);
-	HAL_FLASH_Lock();
+	else
+	{
+		HAL_FLASH_Unlock();
+		HAL_FLASH_Program(FLASH_TYPEPROGRAM_HALFWORD,(uint32_t)(temp_add), step_count);
+		HAL_FLASH_Program(FLASH_TYPEPROGRAM_HALFWORD,(uint32_t)(temp_add+2), hrs_rate);
+		HAL_FLASH_Lock();
+	}
 	flash_read(temp_add);
 	
-	//设置rtc alarm
+
 	hour=curr_time[0];
 	min=(curr_time[1]/2);
 	min=min*2+2;
@@ -197,7 +209,7 @@ void flash_write_movedata(uint16_t step_count,uint16_t hrs_rate)
 	}
 	
 	RTC_AlarmConfig(hour,min);
-	SEGGER_RTT_printf(0,"flash_write_movedata:alarm=%d:%d\r\n",hour,min);
+	SEGGER_RTT_printf(0,"flash_write_movedata:alarm=%x;%d:%d\r\n",curr_date,hour,min);
 
 }
 
@@ -205,6 +217,22 @@ void flash_write_movedata(uint16_t step_count,uint16_t hrs_rate)
 
 void flash_init()
 {
+	
+//		for(int i=0;i<14;i++)
+//		{	
+//			memset(data_header+i,0,sizeof(stru_header));//emtpy memory
+//			//init start address
+//			if(i<7)
+//				data_header[i].start_add=(uint8_t *)(FLASH_DATA1_SECTOR_ADDR+DAY_DATA_LENGTH*i);
+//			else
+//				data_header[i].start_add=(uint8_t *)(FLASH_DATA2_SECTOR_ADDR+DAY_DATA_LENGTH*(i-7));
+//			
+//			SEGGER_RTT_printf(0,"flash_init:%x\r\n",*data_header[i].start_add);
+//		}
+
+//	
+//	return;
+//	
 	/* Unlock the Flash to enable the flash control register access *************/ 
   HAL_FLASH_Unlock();
     

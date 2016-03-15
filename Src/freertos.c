@@ -122,32 +122,40 @@ void StartDefaultTask(void const * argument)
   /* USER CODE BEGIN StartDefaultTask */
 	uint8_t time[3]={0x16,0x32,0x10};
 	uint8_t date[3]={0x16,0x03,0x09};
-	uint8_t data[3];
+	uint8_t data[6];
 	uint8_t count=0;
 	//RTC_Set_datetime(date,2);
 	//RTC_Set_datetime(time,1);
   /* Infinite loop */
+	uart_read(data,6);
   for(;;)
   {
     osDelay(1000);
     /*##-3- Display the updated Time and Date ################################*/
-		RTC_Read_datetime(time,1);
-		RTC_Read_datetime(date,2);
-    //RTC_CalendarShow(aShowTime, aShowDate);
-		//SEGGER_RTT_printf(0,"%02d-%02d-%02d %02d:%02d:%02d\r\n",date[0],date[1],date[2],time[0],time[1],time[2]);
+		//RTC_Read_datetime(time,1);
+		//RTC_Read_datetime(date,2);
+//		SEGGER_RTT_printf(0,"1=%02d-%02d-%02d %02d:%02d:%02d\r\n",date[0],date[1],date[2],time[0],time[1],time[2]);
 
-		//uart_read(date,3);
 		if(recv_flag==1)
 		{
 			recv_flag=0;
-			count=0;
-			RTC_Set_datetime(data,2);
+			uart_read(data,6);
+
+			//RTC_Set_datetime(data,2);
+			//RTC_Set_datetime(&data[3],1);
+			RTC_Set_datetime(data);
+			
+			RTC_AlarmConfig(data[3],data[4]+1);
+
+
+			SEGGER_RTT_printf(0,"3=%02d-%02d-%02d;%02d-%02d-%02d;\r\n",data[0],data[1],data[2],data[3],data[4],data[5]);
+
 		}
-		if(count==0)
-		{
-			uart_read(data,3);
-			count=1;
-		}
+//		if(count==0)
+//		{
+//			uart_read(data,3);
+//			count=1;
+//		}
 
 		
 
@@ -160,13 +168,10 @@ void StartDefaultTask(void const * argument)
 void StartFlashTask(void const * argument)
 {
 			uint16_t a=1,b=2;
-			uint8_t value=0x05;
 	    while(1)
 			{
 				if(osSemaphoreWait(osSemaphore, osWaitForever) == osOK)
 				{
-					if(a>100)
-							continue;
 					a++;
 					b++;
 					flash_write_movedata(a,b);

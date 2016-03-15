@@ -26,33 +26,27 @@ Project File Date:  03/11/2016
 
 <h2>Output:</h2>
 Build target 'demo'
-compiling eric_rtc.c...
-..\Src\main.h(27): warning:  #1-D: last line of file ends without a newline
-  #endif
-..\Src\eric_rtc.h(9): warning:  #1295-D: Deprecated declaration eric_rtc_init - give arg types
-  void eric_rtc_init();
-..\Src\eric_rtc.h(14): warning:  #1-D: last line of file ends without a newline
-  #endif
-..\Src\eric_rtc.c: 3 warnings, 0 errors
 compiling eric_flash.c...
 ..\Src\main.h(27): warning:  #1-D: last line of file ends without a newline
   #endif
 ..\Src\eric_flash.h(31): warning:  #1-D: last line of file ends without a newline
   #endif
-..\Src\eric_flash.c(144): warning:  #223-D: function "RTC_Read_datetime" declared implicitly
-        RTC_Read_datetime((uint8_t *)(&curr_date),2);
-..\Src\eric_flash.c(199): warning:  #223-D: function "RTC_AlarmConfig" declared implicitly
+..\Src\eric_flash.c(145): warning:  #223-D: function "RTC_get_state" declared implicitly
+        if(RTC_get_state()==1)
+..\Src\eric_flash.c(147): warning:  #223-D: function "RTC_Read_datetime" declared implicitly
+                RTC_Read_datetime(curr_time,1);
+..\Src\eric_flash.c(211): warning:  #223-D: function "RTC_AlarmConfig" declared implicitly
         RTC_AlarmConfig(hour,min);
 ..\Src\eric_flash.c(138): warning:  #177-D: variable "i" was declared but never referenced
         uint8_t i=0;
-..\Src\eric_flash.c(255): warning:  #223-D: function "RTC_Read_datetime" declared implicitly
+..\Src\eric_flash.c(283): warning:  #223-D: function "RTC_Read_datetime" declared implicitly
                 RTC_Read_datetime((uint8_t *)(&(data_header[0].curr_date) ),2);
 ..\Src\eric_flash.c(10): warning:  #177-D: variable "Address" was declared but never referenced
   static uint32_t FirstSector = 0, NbOfSectors = 0, Address = 0;
-..\Src\eric_flash.c: 7 warnings, 0 errors
+..\Src\eric_flash.c: 8 warnings, 0 errors
 linking...
-Program Size: Code=31096 RO-data=532 RW-data=624 ZI-data=20768  
-"demo\demo.axf" - 0 Error(s), 10 Warning(s).
+Program Size: Code=31304 RO-data=532 RW-data=624 ZI-data=20768  
+"demo\demo.axf" - 0 Error(s), 8 Warning(s).
 
 <h2>Software Packages used:</h2>
 
