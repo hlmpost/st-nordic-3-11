@@ -120,8 +120,6 @@ void StartDefaultTask(void const * argument)
   MX_USB_DEVICE_Init();
 
   /* USER CODE BEGIN StartDefaultTask */
-	uint8_t time[3]={0x16,0x32,0x10};
-	uint8_t date[3]={0x16,0x03,0x09};
 	uint8_t data[6];
 	uint8_t count=0;
 	//RTC_Set_datetime(date,2);
@@ -148,7 +146,7 @@ void StartDefaultTask(void const * argument)
 			RTC_AlarmConfig(data[3],data[4]+1);
 
 
-			SEGGER_RTT_printf(0,"3=%02d-%02d-%02d;%02d-%02d-%02d;\r\n",data[0],data[1],data[2],data[3],data[4],data[5]);
+			SEGGER_RTT_printf(0,"set_time=%02d-%02d-%02d;%02d-%02d-%02d;\r\n",data[0],data[1],data[2],data[3],data[4],data[5]);
 
 		}
 //		if(count==0)
@@ -168,8 +166,16 @@ void StartDefaultTask(void const * argument)
 void StartFlashTask(void const * argument)
 {
 			uint16_t a=1,b=2;
+			uint8_t data[6]={0x10,0x03,0x09,0x10,0,1};
+			RTC_Set_datetime(data);
+			flash_init(); 
+
 	    while(1)
 			{
+				//RTC_Read_datetime(time,1);
+				//RTC_Read_datetime(date,2);
+				//SEGGER_RTT_printf(0,"alarm_time=%02d-%02d-%02d %02d:%02d:%02d\r\n",date[0],date[1],date[2],time[0],time[1],time[2]);
+
 				if(osSemaphoreWait(osSemaphore, osWaitForever) == osOK)
 				{
 					a++;

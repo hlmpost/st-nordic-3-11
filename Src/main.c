@@ -93,7 +93,6 @@ int main(void)
 
   /* USER CODE BEGIN 2 */
 		eric_rtc_init();
-		flash_init(); 
 
   /* USER CODE END 2 */
 

@@ -150,7 +150,7 @@ void flash_write_movedata(uint16_t step_count,uint16_t hrs_rate)
 	else
 		SEGGER_RTT_printf(0,"flash_write_movedata:rtc state is error\r\n");
 
-	//SEGGER_RTT_printf(0,"2flash_write_movedata:alarm=%02d:%02d:%02d\r\n",curr_time[0],curr_time[1],curr_time[2]);
+	SEGGER_RTT_printf(0,"flash_write_movedata:current_date=%x;alarm=%x,%02d:%02d:%02d\r\n",data_header[curr_index].curr_date,curr_date,curr_time[0],curr_time[1],curr_time[2]);
 
 	//和当前信息头比较
 	if(data_header[curr_index].curr_date!=curr_date)
@@ -209,7 +209,7 @@ void flash_write_movedata(uint16_t step_count,uint16_t hrs_rate)
 	}
 	
 	RTC_AlarmConfig(hour,min);
-	SEGGER_RTT_printf(0,"flash_write_movedata:alarm=%x;%d:%d\r\n",curr_date,hour,min);
+	SEGGER_RTT_printf(0,"flash_write_movedata:index=%d;address=%x\r\n",curr_index,data_header[curr_index].start_add);
 
 }
 

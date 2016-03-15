@@ -54,7 +54,7 @@ void RTC_Set_datetime(uint8_t * data)
   RTC_TimeTypeDef stimestructure;
 	if(data!=NULL)
 	{
-			SEGGER_RTT_printf(0,"RTC_Set_datetime:date=%02d-%02d-%02d;time=%02d-%02d-%02d;\r\n",data[0],data[1],data[2],data[3],data[4],data[5]);
+		
 			sdatestructure.Year =data[0];
 			sdatestructure.Month = data[1];
 			sdatestructure.Date = data[2];
@@ -217,25 +217,27 @@ void eric_rtc_init()
   }
 	
 	//HAL_RTCEx_BKUPWrite(&RtcHandle,RTC_BKP_DR0,0x32F4);  
-	temp=HAL_RTCEx_BKUPRead(&RtcHandle, RTC_BKP_DR0);
-	if(temp != 0x32F4)
-  {  
-    /* Configure RTC Calendar */
-    RTC_CalendarConfig();
-  }
-  else
-  {
-    /* Clear Reset Flag */
-    __HAL_RCC_CLEAR_RESET_FLAGS();
-  }
+//	temp=HAL_RTCEx_BKUPRead(&RtcHandle, RTC_BKP_DR0);
+//	if(temp != 0x32F4)
+//  {  
+//    /* Configure RTC Calendar */
+//    RTC_CalendarConfig();
+//  }
+//  else
+//  {
+//    /* Clear Reset Flag */
+//    __HAL_RCC_CLEAR_RESET_FLAGS();
+//  }
 	
 	//初始化时间
 	{
 		//uint8_t time[3]={0x10,0x00,0x10};
-		uint8_t date[6]={0x10,0x03,0x09,0x10,0x00,0x10};
+		//uint8_t data[6]={0x00,0x03,0x09,0x10,0x00,0x10};
 		//RTC_Set_datetime(date,2);
 		//RTC_Set_datetime(time,1);
-		RTC_Set_datetime(date);
+		//SEGGER_RTT_printf(0,"RTC_Set_datetime:date=%02d-%02d-%02d;time=%02d-%02d-%02d;\r\n",data[0],data[1],data[2],data[3],data[4],data[5]);
+
+		//RTC_Set_datetime(data);
 
 	}
 	//初始化binary
