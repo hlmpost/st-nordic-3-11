@@ -52,6 +52,7 @@
 "demo\eric_rtc.o"
 "demo\comm.o"
 "demo\eric_flash.o"
+"demo\touch.o"
 "demo\segger_rtt.o"
 "demo\segger_rtt_printf.o"
 --library_type=microlib --strict --scatter "demo\demo.sct"

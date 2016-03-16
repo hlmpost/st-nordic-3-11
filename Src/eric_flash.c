@@ -116,21 +116,6 @@ static void flash_erase_sector_init(uint8_t sector_no,uint32_t curr_date)
 
 }
 //------------------------------------------------------
-//写运动数据，可组成4字节一次写入
-//void flash_write_movedata(uint16_t step_count,uint16_t hrs_rate)
-//{
-//	HAL_FLASH_Unlock();
-//	HAL_FLASH_Program(FLASH_TYPEPROGRAM_HALFWORD,(uint32_t)data_region.step_add, step_count);
-//	HAL_FLASH_Program(FLASH_TYPEPROGRAM_HALFWORD,(uint32_t)data_region.hrs_add, hrs_rate);
-//	HAL_FLASH_Lock();
-//	
-//	//SEGGER_RTT_printf(0,"flash_write:%d---%x=%d;%x=%d\r\n",data_region.curr_header->sort_nubmer,(uint32_t)(data_region.step_add),*(data_region.step_add),(uint32_t)(data_region.hrs_add),*(data_region.hrs_add));
-
-//	//data_region.curr_header->sort_nubmer++;//增加序号
-//	data_region.step_add+=2;
-//	data_region.hrs_add=data_region.step_add+1;
-
-//}
 //核心算法，查找存储地址
 //首先读取当前日期，时间，通过日期查找在哪个信息头中，通过时间判断应存储在哪个地址，如果没有的话，就写入当前下一个空信息头。
 void flash_write_movedata(uint16_t step_count,uint16_t hrs_rate)
@@ -218,21 +203,6 @@ void flash_write_movedata(uint16_t step_count,uint16_t hrs_rate)
 void flash_init()
 {
 	
-//		for(int i=0;i<14;i++)
-//		{	
-//			memset(data_header+i,0,sizeof(stru_header));//emtpy memory
-//			//init start address
-//			if(i<7)
-//				data_header[i].start_add=(uint8_t *)(FLASH_DATA1_SECTOR_ADDR+DAY_DATA_LENGTH*i);
-//			else
-//				data_header[i].start_add=(uint8_t *)(FLASH_DATA2_SECTOR_ADDR+DAY_DATA_LENGTH*(i-7));
-//			
-//			SEGGER_RTT_printf(0,"flash_init:%x\r\n",*data_header[i].start_add);
-//		}
-
-//	
-//	return;
-//	
 	/* Unlock the Flash to enable the flash control register access *************/ 
   HAL_FLASH_Unlock();
     

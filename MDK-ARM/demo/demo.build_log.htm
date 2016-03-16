@@ -26,49 +26,21 @@ Project File Date:  03/11/2016
 
 <h2>Output:</h2>
 Build target 'demo'
-compiling freertos.c...
-../Src/eric_flash.h(31): warning:  #1-D: last line of file ends without a newline
-  #endif
-../Src/freertos.c(144): warning:  #223-D: function "RTC_Set_datetime" declared implicitly
-                        RTC_Set_datetime(data);
-../Src/freertos.c(146): warning:  #223-D: function "RTC_AlarmConfig" declared implicitly
-                        RTC_AlarmConfig(data[3],data[4]+1);
-../Src/freertos.c(149): warning:  #223-D: function "SEGGER_RTT_printf" declared implicitly
-                        SEGGER_RTT_printf(0,"set_time=%02d-%02d-%02d;%02d-%02d-%02d;\r\n",data[0],data[1],data[2],data[3],data[4],data[5]);
-../Src/freertos.c(124): warning:  #177-D: variable "count" was declared but never referenced
-        uint8_t count=0;
-../Src/freertos.c(170): warning:  #223-D: function "RTC_Set_datetime" declared implicitly
-                        RTC_Set_datetime(data);
-../Src/freertos.c(171): warning:  #223-D: function "flash_init" declared implicitly
-                        flash_init(); 
-../Src/freertos.c(183): warning:  #223-D: function "flash_write_movedata" declared implicitly
-                                        flash_write_movedata(a,b);
-../Src/freertos.c(186): warning:  #223-D: function "SEGGER_RTT_printf" declared implicitly
-                                        SEGGER_RTT_printf(0,"StartFlashTask:mutex error!\r\n");                         
-../Src/freertos.c: 9 warnings, 0 errors
-compiling main.c...
-../Src/main.c(67): warning:  #223-D: function "SEGGER_RTT_printf" declared implicitly
-        SEGGER_RTT_printf(0,"%err:%s\r\n",err);
-../Src/main.c(76): warning:  #223-D: function "SEGGER_RTT_Init" declared implicitly
-        SEGGER_RTT_Init();
-../Src/main.c(95): warning:  #223-D: function "eric_rtc_init" declared implicitly
-                eric_rtc_init();
-../Src/main.c: 3 warnings, 0 errors
-compiling eric_rtc.c...
+compiling touch.c...
 ..\Src\main.h(27): warning:  #1-D: last line of file ends without a newline
   #endif
-..\Src\eric_rtc.h(9): warning:  #1295-D: Deprecated declaration eric_rtc_init - give arg types
-  void eric_rtc_init();
-..\Src\eric_rtc.h(14): warning:  #1-D: last line of file ends without a newline
+..\Src\touch.h(73): warning:  #1-D: last line of file ends without a newline
   #endif
-..\Src\eric_rtc.c(203): warning:  #177-D: variable "temp" was declared but never referenced
-        uint16_t temp=0;
-..\Src\eric_rtc.c(157): warning:  #177-D: function "RTC_CalendarConfig" was declared but never referenced
-  static void RTC_CalendarConfig(void)
-..\Src\eric_rtc.c: 5 warnings, 0 errors
+..\Src\touch.c(218): warning:  #177-D: variable "i" was declared but never referenced
+      unsigned char  i;
+..\Src\touch.c(228): warning:  #177-D: variable "i" was declared but never referenced
+      unsigned char  i;
+..\Src\touch.c(241): warning:  #177-D: variable "i" was declared but never referenced
+      unsigned char  i;
+..\Src\touch.c: 5 warnings, 0 errors
 linking...
-Program Size: Code=31096 RO-data=532 RW-data=624 ZI-data=20768  
-"demo\demo.axf" - 0 Error(s), 17 Warning(s).
+Program Size: Code=31960 RO-data=632 RW-data=644 ZI-data=20868  
+"demo\demo.axf" - 0 Error(s), 5 Warning(s).
 
 <h2>Software Packages used:</h2>
 
