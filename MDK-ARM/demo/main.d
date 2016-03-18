@@ -32,6 +32,8 @@ demo\main.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr_ex.h
 demo\main.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rtc.h
 demo\main.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rtc_ex.h
 demo\main.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_spi.h
+demo\main.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h
+demo\main.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h
 demo\main.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h
 demo\main.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd.h
 demo\main.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_usb.h
@@ -54,8 +56,8 @@ demo\main.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/queue.h
 demo\main.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/semphr.h
 demo\main.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/event_groups.h
 demo\main.o: ../Inc/i2c.h
-demo\main.o: ../Inc/rtc.h
 demo\main.o: ../Inc/spi.h
+demo\main.o: ../Inc/tim.h
 demo\main.o: ../Inc/usart.h
 demo\main.o: ../Inc/usb_device.h
 demo\main.o: ../Middlewares/ST/STM32_USB_Device_Library/Core/Inc/usbd_def.h

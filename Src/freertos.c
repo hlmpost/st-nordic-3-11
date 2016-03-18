@@ -38,10 +38,13 @@
 
 /* USER CODE BEGIN Includes */     
 #include "eric_flash.h"
+#include "tim.h"
+
 /* USER CODE END Includes */
 
 /* Variables -----------------------------------------------------------------*/
 osThreadId defaultTaskHandle;
+osMessageQId myQueue01Handle;
 
 /* USER CODE BEGIN Variables */
 uint8_t aShowTime[50] = {0};
@@ -62,8 +65,13 @@ osThreadId Rece_data_TaskHandle;//接收命令数据
 osThreadId Lcd_disp_TaskHandle;//显示线程
 osThreadId Touch_TaskHandle;//触摸线程
 
+//timer
+osTimerId my_timer_id;
+
 extern osSemaphoreId osSemaphore;//rtc
 extern osSemaphoreId Semaphore_uart;//uart
+
+extern TIM_HandleTypeDef htim3;
 
 
 
@@ -108,24 +116,28 @@ void MX_FREERTOS_Init(void) {
 
   /* Create the thread(s) */
   /* definition and creation of defaultTask */
-	//默认线程
   osThreadDef(defaultTask, StartDefaultTask, osPriorityNormal, 0, 128);
   defaultTaskHandle = osThreadCreate(osThread(defaultTask), NULL);
 
   /* USER CODE BEGIN RTOS_THREADS */
-	//写数据到flash线程
-  osThreadDef(flash_Task, func_StartFlashTask, osPriorityNormal, 0, 128);
-  Flash_TaskHandle = osThreadCreate(osThread(flash_Task), NULL);
-	//命令数据接收线程
-	osThreadDef(Rece_data_Task, func_Rece_dataTask, osPriorityNormal, 0, 128);
-  Rece_data_TaskHandle = osThreadCreate(osThread(Rece_data_Task), NULL);
-	//显示线程
-  osThreadDef(disp_Task, func_DispTask, osPriorityNormal, 0, 128);
-  Lcd_disp_TaskHandle = osThreadCreate(osThread(disp_Task), NULL);
-	//touch线程
-  osThreadDef(touch_Task, func_TouchTask, osPriorityNormal, 0, 128);
-  Touch_TaskHandle = osThreadCreate(osThread(touch_Task), NULL);
+//	//写数据到flash线程
+//  osThreadDef(flash_Task, func_StartFlashTask, osPriorityNormal, 0, 128);
+//  Flash_TaskHandle = osThreadCreate(osThread(flash_Task), NULL);
+//	//命令数据接收线程
+//	osThreadDef(Rece_data_Task, func_Rece_dataTask, osPriorityNormal, 0, 128);
+//  Rece_data_TaskHandle = osThreadCreate(osThread(Rece_data_Task), NULL);
+//	//显示线程
+//  osThreadDef(disp_Task, func_DispTask, osPriorityNormal, 0, 128);
+//  Lcd_disp_TaskHandle = osThreadCreate(osThread(disp_Task), NULL);
+//	//touch线程
+//  osThreadDef(touch_Task, func_TouchTask, osPriorityNormal, 0, 128);
+//  Touch_TaskHandle = osThreadCreate(osThread(touch_Task), NULL);
   /* USER CODE END RTOS_THREADS */
+
+  /* Create the queue(s) */
+  /* definition and creation of myQueue01 */
+  osMessageQDef(myQueue01, 16, uint16_t);
+  myQueue01Handle = osMessageCreate(osMessageQ(myQueue01), NULL);
 
   /* USER CODE BEGIN RTOS_QUEUES */
   /* add queues, ... */
@@ -139,21 +151,58 @@ void StartDefaultTask(void const * argument)
   MX_USB_DEVICE_Init();
 
   /* USER CODE BEGIN StartDefaultTask */
-  for(;;)
-  {
-    osDelay(1000);
-  }
+//  for(;;)
+//  {
+//    osDelay(1000);
+//		
+//  }
+		eric_rtc_init();
+		//写数据到flash线程
+		osThreadDef(flash_Task, func_StartFlashTask, osPriorityNormal, 0, 128);
+		Flash_TaskHandle = osThreadCreate(osThread(flash_Task), NULL);
+		//命令数据接收线程
+		osThreadDef(Rece_data_Task, func_Rece_dataTask, osPriorityNormal, 0, 128);
+		Rece_data_TaskHandle = osThreadCreate(osThread(Rece_data_Task), NULL);
+		//显示线程
+		osThreadDef(disp_Task, func_DispTask, osPriorityNormal, 0, 128);
+		Lcd_disp_TaskHandle = osThreadCreate(osThread(disp_Task), NULL);
+		//touch线程
+		osThreadDef(touch_Task, func_TouchTask, osPriorityNormal, 0, 128);
+		Touch_TaskHandle = osThreadCreate(osThread(touch_Task), NULL);
+		
+		
+		osThreadTerminate(defaultTaskHandle);
+		
+
   /* USER CODE END StartDefaultTask */
 }
 
 /* USER CODE BEGIN Application */
+//定时回调
+void Timer_Callback  (void const *arg)
+{
+	uint8_t curr_time[3];
+	//RTC_Read_datetime(curr_time,2);
+	//RTC_Read_datetime(curr_time,1);
+	//STM_TIM_Init();
+	SEGGER_RTT_printf(0,"TIMER:test\r\n");		
+		//timer2_test(50000);
+	
+}
+//---------------------------------------------------
 //write flash thread
 void func_StartFlashTask(void const * argument)
 {
 			uint16_t a=1,b=2;
+			osEvent event;
 			uint8_t data[6]={0x10,0x03,0x09,0x10,0,1};
 			RTC_Set_datetime(data);
 			flash_init(); 
+			
+			//test timer
+			osTimerDef(my_timer_id, Timer_Callback);
+			my_timer_id = osTimerCreate(osTimer(my_timer_id), osTimerPeriodic, NULL);
+			osTimerStart(my_timer_id, 10000);
 	    while(1)
 			{
 				if(osSemaphoreWait(osSemaphore, osWaitForever) == osOK)
@@ -161,6 +210,13 @@ void func_StartFlashTask(void const * argument)
 					a++;
 					b++;
 					flash_write_movedata(a,b);
+					//event = osMessageGet(myQueue01Handle, osWaitForever);
+					//if(event.status == osEventMessage)
+					{
+						//SEGGER_RTT_printf(0,"rece info:%d\r\n",event.value.v);			
+					}
+					osSignalSet(Lcd_disp_TaskHandle, 0x1);
+					
 				}
 				else
 					SEGGER_RTT_printf(0,"StartFlashTask:mutex error!\r\n");				
@@ -193,16 +249,21 @@ void func_DispTask(void const * argument)//显示任务
 {
 	while(1)
 	{
-		osDelay(1000);
+		//osDelay(1000);
+		osSignalWait(0x1, osWaitForever);
+		SEGGER_RTT_printf(0,"receive signal!\r\n");			
+
 	}
 }
 //---------------------------------------------------------------
 //touch thread
 void func_TouchTask(void const * argument)//触摸任务
-{
+{uint8_t curr_time[3];
 	while(1)
 	{
-		osDelay(1000);
+		osDelay(5000);
+		//RTC_Read_datetime(curr_time,1);
+		//SEGGER_RTT_printf(0,"TIMER:%d:%d:%d\r\n",curr_time[0],curr_time[1],curr_time[2]);			
 	}
 }
 /* USER CODE END Application */

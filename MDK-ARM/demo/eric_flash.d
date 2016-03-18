@@ -33,6 +33,8 @@ demo\eric_flash.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr_ex.h
 demo\eric_flash.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rtc.h
 demo\eric_flash.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rtc_ex.h
 demo\eric_flash.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_spi.h
+demo\eric_flash.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h
+demo\eric_flash.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h
 demo\eric_flash.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h
 demo\eric_flash.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd.h
 demo\eric_flash.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_usb.h
@@ -64,4 +66,5 @@ demo\eric_flash.o: d:\develop\Keil_v5\ARM\ARMCC\Bin\..\include\string.h
 demo\eric_flash.o: ../Inc/gpio.h
 demo\eric_flash.o: ..\Src\RTT\SEGGER_RTT.h
 demo\eric_flash.o: ../Inc/usart.h
+demo\eric_flash.o: ../Inc/tim.h
 demo\eric_flash.o: ..\Src\eric_flash.h

@@ -4,7 +4,7 @@
 #define FLASH_DATA2_SECTOR_ADDR   ADDR_FLASH_SECTOR_6   /* End @ of user Flash area */
 
 //----------------------------------------------------
-#define DAY_DATA_LENGTH  (2884)//0xb44
+#define DAY_DATA_LENGTH  (5764)//0xb44
 
 //--------------------------------------------------
 static uint32_t FirstSector = 0, NbOfSectors = 0, Address = 0;
@@ -19,6 +19,7 @@ stru_region data_region;
 stru_header data_header[14];
 static uint8_t curr_index=0;//当前正在写的信息头索引
 
+extern uint8_t alarm_flag;
 
 //-------------------------------------------------------------------
 static uint32_t GetSector(uint32_t Address)
@@ -115,21 +116,6 @@ static void flash_erase_sector_init(uint8_t sector_no,uint32_t curr_date)
 
 }
 //------------------------------------------------------
-//写运动数据，可组成4字节一次写入
-//void flash_write_movedata(uint16_t step_count,uint16_t hrs_rate)
-//{
-//	HAL_FLASH_Unlock();
-//	HAL_FLASH_Program(FLASH_TYPEPROGRAM_HALFWORD,(uint32_t)data_region.step_add, step_count);
-//	HAL_FLASH_Program(FLASH_TYPEPROGRAM_HALFWORD,(uint32_t)data_region.hrs_add, hrs_rate);
-//	HAL_FLASH_Lock();
-//	
-//	//SEGGER_RTT_printf(0,"flash_write:%d---%x=%d;%x=%d\r\n",data_region.curr_header->sort_nubmer,(uint32_t)(data_region.step_add),*(data_region.step_add),(uint32_t)(data_region.hrs_add),*(data_region.hrs_add));
-
-//	//data_region.curr_header->sort_nubmer++;//增加序号
-//	data_region.step_add+=2;
-//	data_region.hrs_add=data_region.step_add+1;
-
-//}
 //核心算法，查找存储地址
 //首先读取当前日期，时间，通过日期查找在哪个信息头中，通过时间判断应存储在哪个地址，如果没有的话，就写入当前下一个空信息头。
 void flash_write_movedata(uint16_t step_count,uint16_t hrs_rate)
@@ -139,8 +125,18 @@ void flash_write_movedata(uint16_t step_count,uint16_t hrs_rate)
 	uint8_t curr_time[3];
 	uint16_t offset=0;//扇区偏移值
 	uint8_t* temp_add=0;
-	RTC_Read_datetime((uint8_t *)(&curr_date),2);
-	RTC_Read_datetime(curr_time,1);
+	uint8_t hour,min;
+	
+	if(RTC_get_state()==1)
+	{
+		RTC_Read_datetime(curr_time,1);
+		RTC_Read_datetime((uint8_t *)(&curr_date),2);
+	}
+	else
+		SEGGER_RTT_printf(0,"flash_write_movedata:rtc state is error\r\n");
+
+	SEGGER_RTT_printf(0,"flash_write_movedata:current_date=%x;alarm=%x,%02d:%02d:%02d\r\n",data_header[curr_index].curr_date,curr_date,curr_time[0],curr_time[1],curr_time[2]);
+
 	//和当前信息头比较
 	if(data_header[curr_index].curr_date!=curr_date)
 	{
@@ -164,28 +160,50 @@ void flash_write_movedata(uint16_t step_count,uint16_t hrs_rate)
 	
 	//计算要写入的扇区偏移地址
 	offset=curr_time[0]*60+curr_time[1];
-	if((offset%2)>0)//不能整除
-	{
-		SEGGER_RTT_printf(0,"flash_write_movedata:no equal\r\n");
-	}
-	offset=offset/2;
+//	if((offset%2)>0)//不能整除
+//	{
+//		SEGGER_RTT_printf(0,"flash_write_movedata:no equal\r\n");
+//	}
+//	offset=offset/2;
 	temp_add=(uint8_t *)(data_header[curr_index].start_add+offset*4);
 	if( *temp_add!=0xff && *(temp_add+1)!=0xff)
 	{
 		SEGGER_RTT_printf(0,"flash_write_movedata:data have been writed\r\n");
-		return;
+		//return;
 	}
-	HAL_FLASH_Unlock();
-	HAL_FLASH_Program(FLASH_TYPEPROGRAM_HALFWORD,(uint32_t)(temp_add), step_count);
-	HAL_FLASH_Program(FLASH_TYPEPROGRAM_HALFWORD,(uint32_t)(temp_add+2), hrs_rate);
-	HAL_FLASH_Lock();
+	else
+	{
+		HAL_FLASH_Unlock();
+		HAL_FLASH_Program(FLASH_TYPEPROGRAM_HALFWORD,(uint32_t)(temp_add), step_count);
+		HAL_FLASH_Program(FLASH_TYPEPROGRAM_HALFWORD,(uint32_t)(temp_add+2), hrs_rate);
+		HAL_FLASH_Lock();
+	}
 	flash_read(temp_add);
+	
+
+	hour=curr_time[0];
+	//min=(curr_time[1]/2);
+	//min=min*2+2;
+	min=curr_time[1]+1;
+	if(min>59)
+	{	
+		min-=60;
+		if(hour==23)
+			hour=0;
+		else
+			hour++;
+	}
+	
+	RTC_AlarmConfig(hour,min);
+	SEGGER_RTT_printf(0,"flash_write_movedata:index=%d;address=%x\r\n",curr_index,data_header[curr_index].start_add);
+
 }
 
 //----------------------------------------------------------------------
 
 void flash_init()
 {
+	
 	/* Unlock the Flash to enable the flash control register access *************/ 
   HAL_FLASH_Unlock();
     

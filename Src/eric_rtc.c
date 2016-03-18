@@ -11,6 +11,9 @@ uint8_t alarm_flag=0;
 //rtc alarm 同步
 osSemaphoreId osSemaphore;
 
+osMutexId  rtc_mutex;
+extern osMessageQId myQueue01Handle;
+
 //---------------------------------------------------------
 uint8_t RTC_get_state()
 {
@@ -24,13 +27,15 @@ void RTC_Read_datetime(uint8_t * data,uint8_t flag)
 {
 	RTC_DateTypeDef sdatestructureget;
   RTC_TimeTypeDef stimestructureget;
+	HAL_RTCStateTypeDef status;
 
-
+osMutexWait(rtc_mutex, osWaitForever);
 	if(data!=NULL)
-	{		
+	{	
 		if(flag==1)
 		{
 			/* Get the RTC current Time */
+			status=HAL_RTC_GetState(&RtcHandle);
 			HAL_RTC_GetTime(&RtcHandle, &stimestructureget, RTC_FORMAT_BIN);
 			data[0]=stimestructureget.Hours;
 			data[1]=stimestructureget.Minutes;
@@ -45,6 +50,7 @@ void RTC_Read_datetime(uint8_t * data,uint8_t flag)
 			data[2]=sdatestructureget.Date;
 		}
 	}
+	osMutexRelease(rtc_mutex);
 }
 //-----------------------------------------------------------
 //传入BCD码
@@ -195,6 +201,7 @@ void HAL_RTC_AlarmAEventCallback(RTC_HandleTypeDef *hrtc)
 {
   		SEGGER_RTT_printf(0,"rtc alarm\r\n");
 			osSemaphoreRelease(osSemaphore);
+			//osMessagePut(myQueue01Handle, 1066, 0);
 }
 
 //------------------------------------------
@@ -243,5 +250,8 @@ void eric_rtc_init()
 	//初始化binary
 	osSemaphoreDef(SEM);
 	osSemaphore = osSemaphoreCreate(osSemaphore(SEM) , 1);
+	//mutex
+	osMutexDef(rtc_mutex); 
+	rtc_mutex = osMutexCreate(osMutex(rtc_mutex));
 
 }

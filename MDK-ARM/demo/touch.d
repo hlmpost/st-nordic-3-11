@@ -33,6 +33,8 @@ demo\touch.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr_ex.h
 demo\touch.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rtc.h
 demo\touch.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rtc_ex.h
 demo\touch.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_spi.h
+demo\touch.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h
+demo\touch.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h
 demo\touch.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h
 demo\touch.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd.h
 demo\touch.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_usb.h
@@ -64,4 +66,5 @@ demo\touch.o: d:\develop\Keil_v5\ARM\ARMCC\Bin\..\include\string.h
 demo\touch.o: ../Inc/gpio.h
 demo\touch.o: ..\Src\RTT\SEGGER_RTT.h
 demo\touch.o: ../Inc/usart.h
+demo\touch.o: ../Inc/tim.h
 demo\touch.o: ..\Src\touch.h

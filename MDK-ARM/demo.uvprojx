@@ -506,6 +506,11 @@
               <FileType>1</FileType>
               <FilePath>../Src/usart.c</FilePath>
             </File>
+            <File>
+              <FileName>tim.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Src\tim.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -705,6 +710,31 @@
               <FileName>eric_flash.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\Src\eric_flash.c</FilePath>
+            </File>
+            <File>
+              <FileName>touch.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Src\touch.c</FilePath>
+            </File>
+            <File>
+              <FileName>disp.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Src\disp.c</FilePath>
+            </File>
+            <File>
+              <FileName>EPD_TCON_HAL_Imp.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Src\EPD_TCON_HAL_Imp.c</FilePath>
+            </File>
+            <File>
+              <FileName>Graphics_2bpp.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Src\Graphics_2bpp.c</FilePath>
+            </File>
+            <File>
+              <FileName>SWTCON2_Cortex-M4.lib</FileName>
+              <FileType>4</FileType>
+              <FilePath>..\Src\SWTCON2_Cortex-M4.lib</FilePath>
             </File>
           </Files>
         </Group>

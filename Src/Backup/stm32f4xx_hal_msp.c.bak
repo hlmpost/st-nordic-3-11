@@ -59,7 +59,7 @@ void HAL_MspInit(void)
 }
 
 /* USER CODE BEGIN 1 */
-#if 0
+#if 1
 void HAL_RTC_MspInit(RTC_HandleTypeDef *hrtc)
 {
   RCC_OscInitTypeDef        RCC_OscInitStruct;
@@ -85,6 +85,10 @@ void HAL_RTC_MspInit(RTC_HandleTypeDef *hrtc)
   /*##-2- Enable RTC peripheral Clocks #######################################*/ 
   /* Enable RTC Clock */ 
   __HAL_RCC_RTC_ENABLE(); 
+	
+	HAL_NVIC_SetPriority(RTC_Alarm_IRQn, 0x0F, 0);
+  HAL_NVIC_EnableIRQ(RTC_Alarm_IRQn);
+
 }
 //------------------------------------------------------------
 void HAL_RTC_MspDeInit(RTC_HandleTypeDef *hrtc)

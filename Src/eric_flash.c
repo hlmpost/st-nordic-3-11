@@ -4,7 +4,7 @@
 #define FLASH_DATA2_SECTOR_ADDR   ADDR_FLASH_SECTOR_6   /* End @ of user Flash area */
 
 //----------------------------------------------------
-#define DAY_DATA_LENGTH  (2884)//0xb44
+#define DAY_DATA_LENGTH  (5764)//0xb44
 
 //--------------------------------------------------
 static uint32_t FirstSector = 0, NbOfSectors = 0, Address = 0;
@@ -160,11 +160,11 @@ void flash_write_movedata(uint16_t step_count,uint16_t hrs_rate)
 	
 	//计算要写入的扇区偏移地址
 	offset=curr_time[0]*60+curr_time[1];
-	if((offset%2)>0)//不能整除
-	{
-		SEGGER_RTT_printf(0,"flash_write_movedata:no equal\r\n");
-	}
-	offset=offset/2;
+//	if((offset%2)>0)//不能整除
+//	{
+//		SEGGER_RTT_printf(0,"flash_write_movedata:no equal\r\n");
+//	}
+//	offset=offset/2;
 	temp_add=(uint8_t *)(data_header[curr_index].start_add+offset*4);
 	if( *temp_add!=0xff && *(temp_add+1)!=0xff)
 	{
@@ -182,8 +182,9 @@ void flash_write_movedata(uint16_t step_count,uint16_t hrs_rate)
 	
 
 	hour=curr_time[0];
-	min=(curr_time[1]/2);
-	min=min*2+2;
+	//min=(curr_time[1]/2);
+	//min=min*2+2;
+	min=curr_time[1]+1;
 	if(min>59)
 	{	
 		min-=60;

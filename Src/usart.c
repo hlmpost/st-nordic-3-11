@@ -34,6 +34,7 @@
 
 /* Includes ------------------------------------------------------------------*/
 #include "usart.h"
+
 #include "gpio.h"
 
 /* USER CODE BEGIN 0 */

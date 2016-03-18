@@ -38,17 +38,33 @@
 #include "gpio.h"
 
 /* USER CODE BEGIN 0 */
-volatile uint8_t recv_flag=0;
+#include "main.h"
 
-//--------------------------------------
-//读串口
-void uart_read(uint8_t *buffer,uint8_t len)
+volatile uint8_t recv_flag=0;
+//同步
+osSemaphoreId Semaphore_uart;
+
+//变量
+uint8_t buffer[100];
+static uint8_t temp=0;
+static uint8_t index=1;//从数组1开始记录，0记录总长度
+static uint8_t command_len=5;//接收到的命令长度,基础是5个
+static uint8_t command_start=0;//开始接受命令=1，否则回复为0
+
+//----------------------------------------------
+//写串口
+uint8_t uart_read(uint8_t *buffer,uint8_t len)
 {
-	if(HAL_UART_Receive_IT(&huart1,buffer, len) != HAL_OK)
-  {
-			Error_Handler("uart rece error");
-  }
+	
+	//if(HAL_UART_Receive_IT(&huart1,buffer,len)!=HAL_OK)
+if(HAL_UART_Receive_IT(&huart1,&temp,len)!=HAL_OK)
+	{		
+			Error_Handler("uart receive error\r\n");
+			return 0;
+	}
+	return 1;
 }
+
 //----------------------------------------------
 //写串口
 void uart_send(uint8_t *buffer,uint8_t len)
@@ -61,7 +77,61 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 {
         if(huart==&huart1)
         {
-              recv_flag=1;
+              //recv_flag=1;
+						//osSemaphoreRelease(Semaphore_uart);
+						//SEGGER_RTT_printf(0,"get data!\r\n");	
+					if(command_start==0 && temp==0xfe)
+					{
+						command_start=1;
+						command_len=5;
+						buffer[index]=temp;
+						index++;
+					}
+					else if(command_start==1)
+					{
+						if(index==2 && temp==0x04)//确认时真正的命令
+						{
+							buffer[index]=temp;
+							index++;
+							command_start=2;
+							SEGGER_RTT_printf(0,"command ok,index=%d;command_start=%d\r\n",index,command_start);	
+						}
+						else
+						{
+							index=1;
+							command_start=0;//恢复							
+						}
+					}
+					else  if(command_start==2)//真正命令开始
+					{
+							buffer[index]=temp;
+						//判断命令长度
+							if(index==4)
+							{
+								command_len+=temp;//单字节，总长不能大于255
+								index++;
+							}
+							else
+							{
+								if(index==command_len)//命令接收完成
+								{
+									index=1;
+									command_start=0;//恢复
+									buffer[0]=command_len;
+									osSemaphoreRelease(Semaphore_uart);
+									SEGGER_RTT_printf(0,"data ok,len=%d\r\n",command_len);	
+								}
+								else
+									index++;
+							}
+					}
+					else
+					{
+							index=1;
+							command_start=0;//恢复
+					}
+					SEGGER_RTT_printf(0,"get data:%x!\r\n",temp);	
+					HAL_UART_Receive_IT(&huart1,&temp,1);
         }
 }
 /* USER CODE END 0 */
@@ -112,7 +182,9 @@ void HAL_UART_MspInit(UART_HandleTypeDef* huart)
     HAL_NVIC_SetPriority(USART1_IRQn, 5, 0);
     HAL_NVIC_EnableIRQ(USART1_IRQn);
   /* USER CODE BEGIN USART1_MspInit 1 */
-	
+	//初始化信号量
+	osSemaphoreDef(uart_SEM);
+	Semaphore_uart = osSemaphoreCreate(osSemaphore(uart_SEM) , 1);
   /* USER CODE END USART1_MspInit 1 */
   }
 }

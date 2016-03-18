@@ -9,6 +9,8 @@
 #include "gpio.h"
 #include "SEGGER_RTT.h"
 #include "usart.h"
+#include "tim.h"
+
 
 
 //flash address
