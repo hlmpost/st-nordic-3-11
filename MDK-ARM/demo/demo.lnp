@@ -58,6 +58,7 @@
 "demo\epd_tcon_hal_imp.o"
 "demo\graphics_2bpp.o"
 "..\Src\SWTCON2_Cortex-M4.lib"
+"demo\notify.o"
 "demo\segger_rtt.o"
 "demo\segger_rtt_printf.o"
 --library_type=microlib --strict --scatter "demo\demo.sct"

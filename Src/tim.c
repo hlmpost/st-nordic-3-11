@@ -37,12 +37,8 @@
 
 /* USER CODE BEGIN 0 */
 //pwm
-#define  PERIOD_VALUE       (2100 - 1)  /* Period Value  */
-#define  PULSE1_VALUE       300        /* Capture Compare 1 Value  */
-#define  PULSE2_VALUE       249        /* Capture Compare 2 Value  */
-#define  PULSE3_VALUE       166        /* Capture Compare 3 Value  */
-#define  PULSE4_VALUE       83         /* Capture Compare 4 Value  */
-uint32_t uhPrescalerValue = 0;
+#define  PERIOD_VALUE       (2600 - 1)  /* Period Value  */
+#define  PULSE1_VALUE       500       /* Capture Compare 1 Value  */
 
 
 /* USER CODE END 0 */
@@ -55,7 +51,7 @@ void MX_TIM3_Init(void)
   TIM_MasterConfigTypeDef sMasterConfig;
   TIM_OC_InitTypeDef sConfigOC;
 	
-	  uhPrescalerValue = (uint32_t) ((SystemCoreClock /2) / 21000000) - 1;
+	uint32_t uhPrescalerValue = (uint32_t) ((SystemCoreClock /2) / 1300) - 1;
 
 
   htim3.Instance = TIM3;
@@ -71,7 +67,7 @@ void MX_TIM3_Init(void)
 
   sConfigOC.OCMode = TIM_OCMODE_PWM1;
   sConfigOC.Pulse = PULSE1_VALUE;
-  sConfigOC.OCPolarity = TIM_OCPOLARITY_LOW;
+  sConfigOC.OCPolarity = TIM_OCPOLARITY_HIGH;
   sConfigOC.OCFastMode = TIM_OCFAST_DISABLE;
   HAL_TIM_PWM_ConfigChannel(&htim3, &sConfigOC, TIM_CHANNEL_1);
 

@@ -93,11 +93,6 @@ int main(void)
   MX_TIM3_Init();
 
   /* USER CODE BEGIN 2 */
-		//eric_rtc_init();
-	  if(HAL_TIM_PWM_Start(&htim3, TIM_CHANNEL_1) != HAL_OK)
-		{
-			HAL_TIM_PWM_Stop(&htim3,TIM_CHANNEL_1);
-		}
 
   /* USER CODE END 2 */
 

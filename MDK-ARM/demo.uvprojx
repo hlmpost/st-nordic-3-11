@@ -736,6 +736,11 @@
               <FileType>4</FileType>
               <FilePath>..\Src\SWTCON2_Cortex-M4.lib</FilePath>
             </File>
+            <File>
+              <FileName>notify.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Src\notify.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>

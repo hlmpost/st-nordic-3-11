@@ -181,12 +181,32 @@ void StartDefaultTask(void const * argument)
 //定时回调
 void Timer_Callback  (void const *arg)
 {
+	static uint8_t flag=1;
 	uint8_t curr_time[3];
 	//RTC_Read_datetime(curr_time,2);
 	//RTC_Read_datetime(curr_time,1);
 	//STM_TIM_Init();
 	SEGGER_RTT_printf(0,"TIMER:test\r\n");		
 		//timer2_test(50000);
+			//eric_rtc_init();
+	led_flash(flag);
+	flag++;
+	if(flag>4)
+		flag=1;
+//	if(flag==0)
+//	{
+//		flag=1;
+//	  if(HAL_TIM_PWM_Start(&htim3, TIM_CHANNEL_1)!= HAL_OK)
+//		{
+//			HAL_TIM_PWM_Stop(&htim3,TIM_CHANNEL_1);
+//		}
+//	}
+//	else
+//	{	
+//		//flag=0;
+//		//HAL_TIM_PWM_Stop(&htim3, TIM_CHANNEL_1);
+//	}
+
 	
 }
 //---------------------------------------------------
@@ -202,7 +222,7 @@ void func_StartFlashTask(void const * argument)
 			//test timer
 			osTimerDef(my_timer_id, Timer_Callback);
 			my_timer_id = osTimerCreate(osTimer(my_timer_id), osTimerPeriodic, NULL);
-			osTimerStart(my_timer_id, 10000);
+			osTimerStart(my_timer_id, 20000);
 	    while(1)
 			{
 				if(osSemaphoreWait(osSemaphore, osWaitForever) == osOK)

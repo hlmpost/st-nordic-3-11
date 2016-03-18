@@ -26,10 +26,43 @@ Project File Date:  03/17/2016
 
 <h2>Output:</h2>
 Build target 'demo'
-compiling tim.c...
+compiling freertos.c...
+../Src/eric_flash.h(31): warning:  #1-D: last line of file ends without a newline
+  #endif
+../Src/freertos.c(159): warning:  #223-D: function "eric_rtc_init" declared implicitly
+                eric_rtc_init();
+../Src/freertos.c(189): warning:  #223-D: function "SEGGER_RTT_printf" declared implicitly
+        SEGGER_RTT_printf(0,"TIMER:test\r\n");          
+../Src/freertos.c(192): warning:  #223-D: function "led_flash" declared implicitly
+        led_flash(flag);
+../Src/freertos.c(185): warning:  #177-D: variable "curr_time" was declared but never referenced
+        uint8_t curr_time[3];
+../Src/freertos.c(219): warning:  #223-D: function "RTC_Set_datetime" declared implicitly
+                        RTC_Set_datetime(data);
+../Src/freertos.c(220): warning:  #223-D: function "flash_init" declared implicitly
+                        flash_init(); 
+../Src/freertos.c(232): warning:  #223-D: function "flash_write_movedata" declared implicitly
+                                        flash_write_movedata(a,b);
+../Src/freertos.c(242): warning:  #223-D: function "SEGGER_RTT_printf" declared implicitly
+                                        SEGGER_RTT_printf(0,"StartFlashTask:mutex error!\r\n");                         
+../Src/freertos.c(217): warning:  #177-D: variable "event" was declared but never referenced
+                        osEvent event;
+../Src/freertos.c(260): warning:  #223-D: function "rece_dispatch" declared implicitly
+                                                rece_dispatch(buffer);
+../Src/freertos.c(262): warning:  #223-D: function "SEGGER_RTT_printf" declared implicitly
+                                        SEGGER_RTT_printf(0,"func_Rece_dataTask:mutex error!\r\n");                             
+../Src/freertos.c(251): warning:  #177-D: variable "len" was declared but never referenced
+                        uint8_t len=0;
+../Src/freertos.c(252): warning:  #177-D: variable "mode" was declared but never referenced
+                        uint8_t mode=0;//0=¶Á³¤¶È½×¶Î£¬1=ÃüÁî½×¶Î
+../Src/freertos.c(274): warning:  #223-D: function "SEGGER_RTT_printf" declared implicitly
+                SEGGER_RTT_printf(0,"receive signal!\r\n");                     
+../Src/freertos.c(281): warning:  #177-D: variable "curr_time" was declared but never referenced
+  {uint8_t curr_time[3];
+../Src/freertos.c: 16 warnings, 0 errors
 linking...
-Program Size: Code=37240 RO-data=644 RW-data=676 ZI-data=21036  
-"demo\demo.axf" - 0 Error(s), 0 Warning(s).
+Program Size: Code=37360 RO-data=644 RW-data=676 ZI-data=21036  
+"demo\demo.axf" - 0 Error(s), 16 Warning(s).
 
 <h2>Software Packages used:</h2>
 
